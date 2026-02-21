@@ -1,9 +1,12 @@
 import { useState } from "react";
 import { useCampaigns } from "../hooks/useCampaigns";
+import { useDebounce } from "@/shared/hooks/useDebounce";
 
 export default function CampaignListPage() {
   const [page, setPage] = useState(1);
-  const { data, isLoading } = useCampaigns(page);
+  const [search, setSearch] = useState("");
+  const debouncedSearch = useDebounce(search, 500);
+  const { data, isLoading, isError } = useCampaigns(page, debouncedSearch);
 
   const total = data?.total ?? 0;
   const active = data?.data.filter(c => c.status === "active").length ?? 0;
@@ -23,6 +26,23 @@ export default function CampaignListPage() {
           Monitor and manage your marketing campaigns
         </p>
       </div>
+      {/* Search */}
+      <div className="flex justify-between items-center">
+  <div>
+    <h1 className="text-2xl font-semibold">Campaign Management</h1>
+    <p className="text-gray-500 text-sm mt-1">
+      Monitor and manage your marketing campaigns
+    </p>
+  </div>
+
+  <input
+    type="text"
+    placeholder="Search campaigns..."
+    value={search}
+    onChange={(e) => setSearch(e.target.value)}
+    className="px-4 py-2 border rounded-lg text-sm w-64 focus:outline-none focus:ring-2 focus:ring-blue-500"
+  />
+</div>
 
       {/* KPI CARDS */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
