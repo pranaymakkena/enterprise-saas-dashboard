@@ -6,11 +6,17 @@ export default function CampaignListPage() {
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState("");
   const debouncedSearch = useDebounce(search, 500);
+  const [filters, setFilters] = useState<{
+  status?: string;
+  minBudget?: number;
+  maxBudget?: number;
+}>({});
   const { data, isLoading, isError } = useCampaigns(
   page,
   debouncedSearch,
   sortKey,
-  sortOrder
+  sortOrder,
+  filters
 );
   const [sortKey, setSortKey] = useState<
   "name" | "budget" | "status" | null
@@ -62,7 +68,69 @@ const handleSort = (key: "name" | "budget" | "status") => {
     className="px-4 py-2 border rounded-lg text-sm w-64 focus:outline-none focus:ring-2 focus:ring-blue-500"
   />
 </div>
+<div className="bg-white p-6 rounded-2xl shadow flex flex-wrap gap-4 items-end">
 
+  {/* Status Filter */}
+  <div>
+    <label className="text-xs text-gray-500 block mb-1">Status</label>
+    <select
+      className="border rounded-lg px-3 py-2 text-sm"
+      onChange={(e) =>
+        setFilters(prev => ({
+          ...prev,
+          status: e.target.value || undefined
+        }))
+      }
+    >
+      <option value="">All</option>
+      <option value="active">Active</option>
+      <option value="paused">Paused</option>
+      <option value="draft">Draft</option>
+    </select>
+  </div>
+
+  {/* Min Budget */}
+  <div>
+    <label className="text-xs text-gray-500 block mb-1">Min Budget</label>
+    <input
+      type="number"
+      className="border rounded-lg px-3 py-2 text-sm w-32"
+      onChange={(e) =>
+        setFilters(prev => ({
+          ...prev,
+          minBudget: e.target.value
+            ? Number(e.target.value)
+            : undefined
+        }))
+      }
+    />
+  </div>
+
+  {/* Max Budget */}
+  <div>
+    <label className="text-xs text-gray-500 block mb-1">Max Budget</label>
+    <input
+      type="number"
+      className="border rounded-lg px-3 py-2 text-sm w-32"
+      onChange={(e) =>
+        setFilters(prev => ({
+          ...prev,
+          maxBudget: e.target.value
+            ? Number(e.target.value)
+            : undefined
+        }))
+      }
+    />
+  </div>
+
+  {/* Reset Button */}
+  <button
+    onClick={() => setFilters({})}
+    className="px-4 py-2 bg-gray-100 rounded-lg hover:bg-gray-200 text-sm"
+  >
+    Reset
+  </button>
+</div>
       {/* KPI CARDS */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <KpiCard title="Total Campaigns" value={total} />
