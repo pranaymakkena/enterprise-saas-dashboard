@@ -74,12 +74,29 @@ const handleSort = (key: "name" | "budget" | "status") => {
       <div className="bg-white shadow rounded-2xl overflow-hidden">
         <table className="w-full text-sm">
           <thead className="bg-gray-50 text-gray-600 uppercase text-xs">
-            <tr>
-              <th className="px-6 py-4 text-left">Name</th>
-              <th className="px-6 py-4 text-left">Status</th>
-              <th className="px-6 py-4 text-left">Budget</th>
-            </tr>
-          </thead>
+  <tr>
+    <th
+      onClick={() => handleSort("name")}
+      className="px-6 py-4 text-left cursor-pointer select-none"
+    >
+      Name {sortKey === "name" && (sortOrder === "asc" ? "▲" : "▼")}
+    </th>
+
+    <th
+      onClick={() => handleSort("status")}
+      className="px-6 py-4 text-left cursor-pointer select-none"
+    >
+      Status {sortKey === "status" && (sortOrder === "asc" ? "▲" : "▼")}
+    </th>
+
+    <th
+      onClick={() => handleSort("budget")}
+      className="px-6 py-4 text-left cursor-pointer select-none"
+    >
+      Budget {sortKey === "budget" && (sortOrder === "asc" ? "▲" : "▼")}
+    </th>
+  </tr>
+</thead>
           <tbody>
             {data?.data.map((campaign) => (
               <tr key={campaign.id} className="border-t hover:bg-gray-50 transition">
