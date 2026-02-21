@@ -6,7 +6,26 @@ export default function CampaignListPage() {
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState("");
   const debouncedSearch = useDebounce(search, 500);
-  const { data, isLoading, isError } = useCampaigns(page, debouncedSearch);
+  const { data, isLoading, isError } = useCampaigns(
+  page,
+  debouncedSearch,
+  sortKey,
+  sortOrder
+);
+  const [sortKey, setSortKey] = useState<
+  "name" | "budget" | "status" | null
+>(null);
+
+const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
+
+const handleSort = (key: "name" | "budget" | "status") => {
+  if (sortKey === key) {
+    setSortOrder(prev => (prev === "asc" ? "desc" : "asc"));
+  } else {
+    setSortKey(key);
+    setSortOrder("asc");
+  }
+};
 
   const total = data?.total ?? 0;
   const active = data?.data.filter(c => c.status === "active").length ?? 0;
