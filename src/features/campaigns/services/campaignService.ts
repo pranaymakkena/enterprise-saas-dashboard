@@ -8,12 +8,29 @@ let campaigns: Campaign[] = Array.from({ length: 50 }).map((_, i) => ({
 }));
 
 export const campaignService = {
-  async getCampaigns(page: number, pageSize: number, search = "") {
+  async getCampaigns(
+  page: number,
+  pageSize: number,
+  search = "",
+  sortKey: "name" | "budget" | "status" | null = null,
+  sortOrder: "asc" | "desc" = "asc"
+) {
   await new Promise(r => setTimeout(r, 800));
 
-  const filtered = campaigns.filter(c =>
+  let filtered = campaigns.filter(c =>
     c.name.toLowerCase().includes(search.toLowerCase())
   );
+
+  if (sortKey) {
+    filtered = [...filtered].sort((a, b) => {
+      const valueA = a[sortKey];
+      const valueB = b[sortKey];
+
+      if (valueA < valueB) return sortOrder === "asc" ? -1 : 1;
+      if (valueA > valueB) return sortOrder === "asc" ? 1 : -1;
+      return 0;
+    });
+  }
 
   const start = (page - 1) * pageSize;
 
