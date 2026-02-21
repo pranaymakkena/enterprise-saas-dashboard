@@ -49,7 +49,7 @@ export default function CampaignListPage() {
                   <StatusBadge status={campaign.status} />
                 </td>
                 <td className="px-6 py-4 font-medium">
-                  ${campaign.budget.toLocaleString()}
+                  ₹{campaign.budget.toLocaleString()}
                 </td>
               </tr>
             ))}
