@@ -14,11 +14,13 @@ export default function CampaignListPage() {
   >(null);
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
 
-  const [filters, setFilters] = useState<{
-    status?: string;
-    minBudget?: number;
-    maxBudget?: number;
-  }>({});
+  const [rawFilters, setRawFilters] = useState<{
+  status?: string;
+  minBudget?: number;
+  maxBudget?: number;
+}>({});
+
+const debouncedFilters = useDebounce(rawFilters, 500);
 
   const { selectedIds, toggle, selectAll, clear } = useSelectionStore();
 
@@ -27,7 +29,7 @@ export default function CampaignListPage() {
     debouncedSearch,
     sortKey,
     sortOrder,
-    filters
+    debouncedFilters
   );
 
   const handleSort = (key: "name" | "budget" | "status") => {
@@ -91,7 +93,7 @@ export default function CampaignListPage() {
           <select
             className="border rounded-lg px-3 py-2 text-sm"
             onChange={(e) =>
-              setFilters((prev) => ({
+              setRawFilters((prev) => ({
                 ...prev,
                 status: e.target.value || undefined,
               }))
@@ -110,7 +112,7 @@ export default function CampaignListPage() {
             type="number"
             className="border rounded-lg px-3 py-2 text-sm w-32"
             onChange={(e) =>
-              setFilters((prev) => ({
+              setRawFilters((prev) => ({
                 ...prev,
                 minBudget: e.target.value
                   ? Number(e.target.value)
@@ -126,7 +128,7 @@ export default function CampaignListPage() {
             type="number"
             className="border rounded-lg px-3 py-2 text-sm w-32"
             onChange={(e) =>
-              setFilters((prev) => ({
+              setRawFilters((prev) => ({
                 ...prev,
                 maxBudget: e.target.value
                   ? Number(e.target.value)
@@ -137,7 +139,7 @@ export default function CampaignListPage() {
         </div>
 
         <button
-          onClick={() => setFilters({})}
+          onClick={() => setRawFilters({})}
           className="px-4 py-2 bg-gray-100 rounded-lg hover:bg-gray-200 text-sm"
         >
           Reset
