@@ -13,13 +13,30 @@ export const campaignService = {
   pageSize: number,
   search = "",
   sortKey: "name" | "budget" | "status" | null = null,
-  sortOrder: "asc" | "desc" = "asc"
+  sortOrder: "asc" | "desc" = "asc",
+  filters?: {
+    status?: string;
+    minBudget?: number;
+    maxBudget?: number;
+  }
 ) {
   await new Promise(r => setTimeout(r, 800));
 
   let filtered = campaigns.filter(c =>
-    c.name.toLowerCase().includes(search.toLowerCase())
-  );
+  c.name.toLowerCase().includes(search.toLowerCase())
+);
+
+if (filters?.status) {
+  filtered = filtered.filter(c => c.status === filters.status);
+}
+
+if (filters?.minBudget !== undefined) {
+  filtered = filtered.filter(c => c.budget >= filters.minBudget!);
+}
+
+if (filters?.maxBudget !== undefined) {
+  filtered = filtered.filter(c => c.budget <= filters.maxBudget!);
+}
 
   if (sortKey) {
     filtered = [...filtered].sort((a, b) => {
