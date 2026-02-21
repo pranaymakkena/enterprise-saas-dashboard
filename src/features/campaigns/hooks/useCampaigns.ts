@@ -23,5 +23,6 @@ export const useCampaigns = (
         sortOrder,
         filters
       ),
-    keepPreviousData: true
+    keepPreviousData: true,
+    staleTime: 5000
   });
