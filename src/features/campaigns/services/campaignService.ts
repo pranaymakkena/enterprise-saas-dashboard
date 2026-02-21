@@ -8,11 +8,20 @@ let campaigns: Campaign[] = Array.from({ length: 50 }).map((_, i) => ({
 }));
 
 export const campaignService = {
-  async getCampaigns(page: number, pageSize: number) {
-    await new Promise(r => setTimeout(r, 800));
-    const start = (page - 1) * pageSize;
-    return { data: campaigns.slice(start, start + pageSize), total: campaigns.length };
-  },
+  async getCampaigns(page: number, pageSize: number, search = "") {
+  await new Promise(r => setTimeout(r, 800));
+
+  const filtered = campaigns.filter(c =>
+    c.name.toLowerCase().includes(search.toLowerCase())
+  );
+
+  const start = (page - 1) * pageSize;
+
+  return {
+    data: filtered.slice(start, start + pageSize),
+    total: filtered.length
+  };
+},
   async updateStatus(id: string, status: string) {
     await new Promise(r => setTimeout(r, 500));
     campaigns = campaigns.map(c => c.id === id ? { ...c, status: status as any } : c);
